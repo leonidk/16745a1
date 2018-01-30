@@ -6,6 +6,7 @@ from autograd import elementwise_grad as egrad
 import scipy.optimize as opt
 import transforms3d_grad as transforms3d
 
+# from http://paulbourke.net/geometry/circlesphere/sphere_line_intersection.py
 def sphere_line_intersection(l1, l2, sp, r):
 
     def square(f):
@@ -120,6 +121,13 @@ def part2(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
     midpoint = lambda mn,mx: mn+0.5*(mx-mn)
     x0 = [midpoint(min_roll[i],max_roll[i]) for i in range(N)] + [midpoint(min_pitch[i],max_pitch[i]) for i in range(N)] + [midpoint(min_yaw[i],  max_yaw[i]) for i in range(N)] 
     jac = grad(func)
+
+    def jac_reg(x):
+        j = jac(x)
+        if np.isfinite(j).all():
+            return j
+        else:
+            return opt.approx_fprime(x0,func,1e-6)
     print(jac(x0))
     if False:     # quat should be norm 1 ?
         eps = 1e-3
@@ -132,7 +140,7 @@ def part2(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
         pass #soft for now?
 
     # I think only method='SLSQP' is good?
-    res = opt.minimize(func,x0=x0,bounds=bounds,constraints=constraints,method='SLSQP')
+    res = opt.minimize(func,x0=x0,bounds=bounds,constraints=constraints,method='SLSQP',jac=jac_reg)
     print(res)
     return res.x[:N], res.x[N:2*N], res.x[2*N:]
 
@@ -146,7 +154,7 @@ if __name__ == '__main__':
     max_yaw      = [+pi/2.0 for _ in range(N)]
     min_pitch    = [-pi for _ in range(N)]
     max_pitch    = [+pi for _ in range(N)]
-    obstacles    = [ ] #[1,1,1, 0.75]
+    obstacles    = [[1,1,1, 0.75] ] #[1,1,1, 0.75]
 
     target = [3,3,3, 1,0,0,0]
     res = part2(target,link_lengths,min_roll,max_roll,min_pitch,max_pitch,min_yaw,max_yaw,obstacles)
