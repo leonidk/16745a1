@@ -37,7 +37,7 @@ import math
 
 from functools import reduce
 
-import numpy as np
+import autograd.numpy as np
 
 from .axangles import axangle2mat
 

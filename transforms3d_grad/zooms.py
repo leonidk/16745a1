@@ -7,7 +7,7 @@ Terms used in function names:
 * *zfdir* : zooms encoded by factor scalar and direction vector
 '''
 
-import numpy as np
+import autograd.numpy as np
 
 from .utils import normalized_vector
 

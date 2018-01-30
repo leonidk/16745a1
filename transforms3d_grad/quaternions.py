@@ -21,7 +21,7 @@ Terms used in function names:
 '''
 
 import math
-import numpy as np
+import autograd.numpy as np
 
 _MAX_FLOAT = np.maximum_sctype(np.float)
 _FLOAT_EPS = np.finfo(np.float).eps
@@ -203,7 +203,7 @@ def mat2quat(M):
     # Qyx refers to the contribution of the y input vector component to
     # the x output vector component.  Qyx is therefore the same as
     # M[0,1].  The notation is from the Wikipedia article.
-    Qxx, Qyx, Qzx, Qxy, Qyy, Qzy, Qxz, Qyz, Qzz = M.flat
+    Qxx, Qyx, Qzx, Qxy, Qyy, Qzy, Qxz, Qyz, Qzz = M.ravel()
     # Fill only lower half of symmetric matrix
     K = np.array([
         [Qxx - Qyy - Qzz, 0,               0,               0              ],

@@ -7,7 +7,7 @@ Terms used in function names:
 * *rfnorm* : reflection in plane defined by normal vector and optional point.
 """
 
-import numpy as np
+import autograd.numpy as np
 
 from .utils import normalized_vector
 

@@ -61,10 +61,9 @@ def sphere_line_intersection(l1, l2, sp, r):
     return p1, p2
 
 
-def fwd(start,length,r,p,y,quat):
-    qM = transforms3d.euler.quat2mat(quat)
-    M =transforms3d.euler.euler2mat(r,p,y,'sxyz')
-    return start+np.array([length,0,0]).dot(M), transforms3d.quaternions.mat2quat(qM.dot(M))
+def fwd(start,length,r,p,y,qM):
+    M = transforms3d.euler.euler2mat(r,p,y,'sxyz')
+    return start+np.array([length,0,0]).dot(M), qM.dot(M)
 
 def part1(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw, max_yaw, obstacles):
     """Function that uses optimization to do inverse kinematics for a snake robot
@@ -84,21 +83,20 @@ def part1(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
     """
     N = len(link_length)
     def func(x0):
-        pos = [0,0,0]
-        quat = [1,0,0,0]
+        pos = np.array([0,0,0])
+        qM = np.eye(3)
         rs = x0[:N]
         ps = x0[N:2*N]
         ys = x0[2*N:]
         ll = link_length
         for r,p,y,l in zip(rs,ps,ys,ll):
-            pos,quat = fwd(pos,l,r,p,y,quat)
-        quat = np.array(quat)
+            pos,qM = fwd(pos,l,r,p,y,qM)
         t = np.array(target)
         C = 1 # meters and radians. Close enough
         extra = 0.0
         for ob in obstacles:
-            p0 = [0,0,0]
-            q = [1,0,0,0]
+            p0 = np.array([0,0,0])
+            q = np.eye(3)
             for r,p,y,l in zip(rs,ps,ys,ll):
                 p1,q = fwd(p0,l,r,p,y,q)
                 i1,i2 = sphere_line_intersection(p0,p1,ob[:3],ob[3])
@@ -109,6 +107,7 @@ def part1(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
                 if i2 is not None:
                     i2 = np.array(i2)
                     extra += (((ob[:3]-i2)**2-ob[3])**2).sum()
+        quat = transforms3d.quaternions.mat2quat(qM)
         rot_error = 1.0 - np.sqrt(((quat*np.array([t[3],-t[4],-t[5],-t[6]]))**2 ).sum() )
         return np.sqrt((pos[:3]-t[:3])**2).sum() + C*rot_error + extra
 
@@ -159,17 +158,17 @@ if __name__ == '__main__':
     ax = fig.gca(projection='3d')
     x0 = np.hstack(res)#[0,0,0, pi/4,pi/4,pi/4, 0,0,0]
     # plot lines
-    pos = [0,0,0]
-    quat = [1,0,0,0]
+    pos = np.array([0,0,0])
+    qM = np.eye(3)
     rs = x0[:N]
     ps = x0[N:2*N]
     ys = x0[2*N:]
     ll = link_lengths
     for r,p,y,l in zip(rs,ps,ys,ll):
         pos0 = pos
-        pos,quat = fwd(pos,l,r,p,y,quat)
+        pos,qM = fwd(pos,l,r,p,y,qM)
         ax.plot([pos0[0],pos[0]], [pos0[1],pos[1]],[pos0[2],pos[2]])
-        print(pos,quat)
+        print(pos,qM)
 
     # plot spheres
     for o in obstacles:

@@ -11,7 +11,7 @@ Terms used in function names:
 """
 
 import math
-import numpy as np
+import autograd.numpy as np
 
 
 def axangle2mat(axis, angle, is_normalized=False):

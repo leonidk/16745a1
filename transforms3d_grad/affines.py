@@ -2,7 +2,7 @@
 
 import math
 
-import numpy as np
+import autograd.numpy as np
 
 from .shears import striu2mat
 

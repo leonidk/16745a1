@@ -135,7 +135,7 @@ Terms used in function names
 
 import math
 
-import numpy as np
+import autograd.numpy as np
 
 from .quaternions import quat2mat, quat2axangle
 from .axangles import axangle2mat

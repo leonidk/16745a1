@@ -3,7 +3,7 @@
 import math
 from itertools import permutations
 
-import numpy as np
+import autograd.numpy as np
 
 
 def normalized_vector(vec):
