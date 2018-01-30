@@ -109,8 +109,8 @@ def part1(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
                 if i2 is not None:
                     i2 = np.array(i2)
                     extra += (((ob[:3]-i2)**2-ob[3])**2).sum()
-                print(extra,i1,i2)
-        return np.sqrt((pos[:3]-t[:3])**2).sum() + C*(1.0-(quat * t[3:])**2).sum() + extra
+        rot_error = 1.0 - np.sqrt(((quat*np.array([t[3],-t[4],-t[5],-t[6]]))**2 ).sum() )
+        return np.sqrt((pos[:3]-t[:3])**2).sum() + C*rot_error + extra
 
     bounds =          [(x,y) for x,y in zip(min_roll, max_roll)]
     bounds = bounds + [(x,y) for x,y in zip(min_pitch,max_pitch)]
