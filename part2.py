@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import autograd.numpy as np
-from autograd import grad, jacobian  
+from autograd import grad, jacobian, hessian, jacobian, hessian_vector_product
 from autograd import elementwise_grad as egrad 
 
 import scipy.optimize as opt
@@ -64,9 +64,9 @@ def sphere_line_intersection(l1, l2, sp, r):
     return p1, p2
 
 
-def fwd(start,length,r,p,y,qM):
+def fwd(s,length,r,p,y,qM):
     M = transforms3d.euler.euler2mat(r,p,y,'sxyz')
-    return start+np.array([length,0,0]).dot(M), qM.dot(M)
+    return s+np.array([length,0,0]).dot(M), qM.dot(M)
 
 def part2(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw, max_yaw, obstacles):
     """Function that uses optimization to do inverse kinematics for a snake robot
@@ -120,8 +120,9 @@ def part2(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
     
     midpoint = lambda mn,mx: mn+0.5*(mx-mn)
     x0 = [midpoint(min_roll[i],max_roll[i]) for i in range(N)] + [midpoint(min_pitch[i],max_pitch[i]) for i in range(N)] + [midpoint(min_yaw[i],  max_yaw[i]) for i in range(N)] 
+    x0 = np.array(x0) + 1e-6
     jac = grad(func)
-
+    hess = hessian(func)
     def jac_reg(x):
         j = jac(x)
         if np.isfinite(j).all():
@@ -140,14 +141,24 @@ def part2(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
         pass #soft for now?
 
     # I think only method='SLSQP' is good?
-    res = opt.minimize(func,x0=x0,bounds=bounds,constraints=constraints,method='SLSQP',jac=jac_reg)
-    print(res)
-    return res.x[:N], res.x[N:2*N], res.x[2*N:]
+    # L-BFGS-B, TNC and SLSQP
+    # Powell, SLSQP, COBYLA
+    if False:
+        import cma
+        es = cma.CMAEvolutionStrategy(x0, pi/2.0, {'bounds':list(zip(*bounds))})
+        es.optimize(func)
+        print(es.result_pretty())
+        resx = es.result.xbest
+    else:
+        res = opt.minimize(func,x0=x0,bounds=bounds,constraints=constraints,method='Powell',jac=jac_reg)
+        print(res)
+        resx = res.x
+    return resx[:N], resx[N:2*N], resx[2*N:]
 
 if __name__ == '__main__':
-    N = 6
+    N = 3
     pi = 3.14159
-    link_lengths = [2 for _ in range(N)]
+    link_lengths = [2.0 for _ in range(N)]
     min_roll     = [-pi for _ in range(N)]
     max_roll     = [+pi for _ in range(N)]
     min_yaw      = [-pi/2.0 for _ in range(N)]
@@ -179,7 +190,8 @@ if __name__ == '__main__':
         pos0 = pos
         pos,qM = fwd(pos,l,r,p,y,qM)
         ax.plot([pos0[0],pos[0]], [pos0[1],pos[1]],[pos0[2],pos[2]])
-        print(pos,qM)
+        print(pos,np.sqrt(((pos-pos0)**2).sum()),qM,'\n')
+        
 
     # plot spheres
     for o in obstacles:
@@ -194,7 +206,7 @@ if __name__ == '__main__':
     ax.scatter(target[0], target[1], target[2], c='r')
 
     ax.legend()
-    ax.set_xlim(0,5)
-    ax.set_ylim(0,5)
-    ax.set_zlim(0,5)
+    ax.set_xlim(-6,6)
+    ax.set_ylim(-6,6)
+    ax.set_zlim(-6,6)
     plt.show()

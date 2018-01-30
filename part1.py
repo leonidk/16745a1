@@ -134,7 +134,7 @@ def part1(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
     return res.x[:N], res.x[N:2*N], res.x[2*N:]
 
 if __name__ == '__main__':
-    N = 6
+    N = 3
     pi = 3.14159
     link_lengths = [2 for _ in range(N)]
     min_roll     = [-pi for _ in range(N)]

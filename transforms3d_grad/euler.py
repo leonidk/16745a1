@@ -209,11 +209,9 @@ def euler2mat(ai, aj, ak, axes='sxyz'):
     ci, cj, ck = np.cos(ai), np.cos(aj), np.cos(ak)
     cc, cs = ci*ck, ci*sk
     sc, ss = si*ck, si*sk
-
-    return np.array([[cj*ck,cj*sc-cs,sj*cc+ss],[cj*sk,sj*ss+cc,sj*cs-sc],[-sj,cj*si,sj*ci] ])
-    '''M = np.eye(3)
     if repetition:
-        M[i, i] = cj
+        return np.array([[cj,sj*si,sj*ci],[sj*sk,-cj*ss+cc,-cj*cs-sc],[-sj*ck,cj*sc+cs,cj*cc-ss] ])
+        '''M[i, i] = cj
         M[i, j] = sj*si
         M[i, k] = sj*ci
         M[j, i] = sj*sk
@@ -221,9 +219,10 @@ def euler2mat(ai, aj, ak, axes='sxyz'):
         M[j, k] = -cj*cs-sc
         M[k, i] = -sj*ck
         M[k, j] = cj*sc+cs
-        M[k, k] = cj*cc-ss
+        M[k, k] = cj*cc-ss'''
     else:
-        M[i, i] = cj*ck
+        return np.array([[cj*ck,sj*sc-cs,sj*cc+ss],[cj*sk,sj*ss+cc,sj*cs-sc],[-sj,cj*si,cj*ci] ])
+        '''M[i, i] = cj*ck
         M[i, j] = sj*sc-cs
         M[i, k] = sj*cc+ss
         M[j, i] = cj*sk
@@ -231,9 +230,8 @@ def euler2mat(ai, aj, ak, axes='sxyz'):
         M[j, k] = sj*cs-sc
         M[k, i] = -sj
         M[k, j] = cj*si
-        M[k, k] = cj*ci
-        '''
-    return M
+        M[k, k] = cj*ci'''
+    #return M
 
 
 def mat2euler(mat, axes='sxyz'):
