@@ -1,5 +1,6 @@
 # Inverse Kinematics through Optimization
-[CMU RI 16-745: Dynamic Optimization: Assignment 1](http://www.cs.cmu.edu/~cga/dynopt/ass1/), from Leonid Keselman and Alex Spitzer
+[CMU RI 16-745: Dynamic Optimization: Assignment 1](http://www.cs.cmu.edu/~cga/dynopt/ass1/)
+Leonid Keselman and Alex Spitzer
 
 ## Part 1
 We implemented the solve function following the requested template (see **solve()** in **iksolver.py**). This uses  **scipy.optimize.minimize** to set an **N** link arm of given lengths to a given target position. Optimization is performed using [Euler Angles](https://en.wikipedia.org/wiki/Euler_angles), which means solver is susceptible to gimbal lock. Roll, pitch and yaw have a hard inequality constraint for limits of [-pi,pi],[-pi,pi],[-pi/2,pi/2] respectively. while obstacle avoidance is done with a soft penalty for every time a link segment intersects any given obstacle. We minimize squared distance from the target point, along with a [0,1] penalty for the arcosine of the rotation error. 
