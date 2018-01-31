@@ -45,6 +45,14 @@ optional arguments:
                         obstacles 4xM values (default: [1, 1, 1, 0.5])
   --random              use random init (default: False)
   ```
+### Examples
+`python ik.py --links 3 3 3 3 3 3 --target 2 5 9 0.707 0 0.707 0 --obs 2 7 2 7 --method CMA`
+
+`python ik.py --links 2 2 2 --target 3 3 3 1 0 0 0 --obs 1 1 1 0.5`
+
+`python ik.py --links 2 2  --target -4 0 0 1 0 0 0 --obs --method CMA`
+
+`python ik.py --links 1 2 3 5 3 2 1  --target 4 5 4 1 0 0 0 --obs 2 2 2 2`
 
 ## Repository Information
 **ik.py** is a command line program demonstrating the use of an optimizer for inverse kinematics. **iksolver.py** contains the solve method, the objective function and bounds setting. **part1.py** and **part2.py** provide the same functionality but without command line arguments, following the more classical structure of the assignment. 
