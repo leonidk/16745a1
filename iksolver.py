@@ -122,27 +122,36 @@ def solve(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
     bounds =          [(x,y) for x,y in zip(min_roll, max_roll)]
     bounds = bounds + [(x,y) for x,y in zip(min_pitch,max_pitch)]
     bounds = bounds + [(x,y) for x,y in zip(min_yaw,  max_yaw)]
-    print('BOUNDS',bounds)
+    #print('BOUNDS',bounds)
     #midpoint = lambda mn,mx: mn+0.5*(mx-mn)
     #x0 = [midpoint(min_roll[i],max_roll[i]) for i in range(N)] + [midpoint(min_pitch[i],max_pitch[i]) for i in range(N)] + [midpoint(min_yaw[i],  max_yaw[i]) for i in range(N)] 
     
     x0 = np.array(initial_x) + 1e-6
     constraints = []
     
-    if use_grad:
+    if use_grad or use_hess:
         jac = grad(func)
-        #hess = hessian(func)
         def jac_reg(x):
             j = jac(x)
             if np.isfinite(j).all():
                 return j
             else:
                 return opt.approx_fprime(x,func,1e-6)
-        jacobian = jac_reg
-        #print('USING A.GRAD')
+        jacob = jac_reg
     else:
-        jacobian = None
-        #print('USING N.GRAD')
+        jacob = None
+
+    if use_hess:
+        hess = jacobian(grad(func))
+        def hess_reg(x):
+            h = hess(x)
+            if np.isfinite(h).all():
+                return h
+            else:
+                return opt.approx_fprime(x,jac_reg,1e-6)
+        hessi = hess_reg
+    else:
+        hessi = None
 
     if method == 'CMA':
         import cma
@@ -150,8 +159,17 @@ def solve(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
         es.optimize(func)
         #print(es.result_pretty())
         resx = es.result.xbest
+    elif method == 'diffev':
+        def callback(xk, convergence):
+            #print(convergence)
+            if convergence < 1e-1:
+                return True
+            return False
+        res = opt.differential_evolution(func,bounds,callback=callback)
+        print(res)
+        resx = res.x
     else:
-        res = opt.minimize(func,x0=x0,bounds=bounds,constraints=constraints,method=method,jac=jacobian)
+        res = opt.minimize(func,x0=x0,bounds=bounds,constraints=constraints,method=method,jac=jacob,hess=hessi)
         print(res)
         resx = res.x
     return resx[:N], resx[N:2*N], resx[2*N:]

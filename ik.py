@@ -12,12 +12,14 @@ if __name__ == '__main__':
 
     parser.add_argument('--links', nargs='+', help="link lengths",default=[2,2,2])
     parser.add_argument('--target', nargs='+', help="target position and quat",default=[3,3,3, 1,0,0,0])
-    parser.add_argument('--method', help="solver method", choices=['Powell', 'SLSQP', 'COBYLA', 'CMA'],default='SLSQP')
+    parser.add_argument('--method', help="solver method", choices=['Powell', 'SLSQP', 'COBYLA', 'CMA','L-BFGS-B','diffev'],default='SLSQP')
     parser.add_argument('--grad', dest='grad', action='store_true',help='use the analytical jacobian')
+    parser.add_argument('--hess', dest='hess', action='store_true',help='use the analytical hessian')
     parser.add_argument('--obs', nargs='*', help="obstacles 4xM values",default=[1,1,1, 0.5])
     parser.add_argument('--random', dest='random', action='store_true',help='use random init')
 
     parser.set_defaults(grad=False)
+    parser.set_defaults(hess=False)
     parser.set_defaults(random=False)
 
     args = parser.parse_args()
@@ -36,6 +38,7 @@ if __name__ == '__main__':
     
     ik.method = args.method
     ik.use_grad = args.grad
+    ik.use_hess = args.hess
     ik.initial_x = [0.0 for _ in range(N*3)]
     if args.random:
         import random
