@@ -17,7 +17,7 @@ We included the Python CMA package, which uses CMA-ES. We set sigma to pi/2.0 fo
 Some of our reports results are below
 
 ## Part 4
-We can find multiple local minima by initializing different solvers with different random initial conditions. We can then report multiple converged results, sorted by our fitness function. Some examples of multiple solution returned and sorted can be seen below. 
+We can find multiple local minima by initializing different solvers with different random initial conditions. We can then report multiple converged results, sorted by our fitness function. Some examples of multiple solutions returned and sorted can be seen below. 
 
 ## Usage
 We're using Python 3.6, and the python packages *numpy*, *matplotlib*, *cma*, *autograd* and *transforms3d*. The first four can be installed with `pip install` while the last one already is included locally. 
@@ -25,8 +25,8 @@ We're using Python 3.6, and the python packages *numpy*, *matplotlib*, *cma*, *a
 See `python ik.py --help` for information about how to run the optimizer (set target position, select method, set obstacles, etc.) 
 ```
 usage: ik.py [-h] [--links LINKS [LINKS ...]] [--target TARGET [TARGET ...]]
-             [--method {Powell,SLSQP,COBYLA,CMA}] [--grad]
-             [--obs [OBS [OBS ...]]] [--random]
+             [--method {Powell,SLSQP,COBYLA,CMA,L-BFGS-B,diffev}] [--grad]
+             [--hess] [--obs [OBS [OBS ...]]] [--random]
 
 Solve ik for N joint arm
 
@@ -37,9 +37,10 @@ optional arguments:
   --target TARGET [TARGET ...]
                         target position and quat (default: [3, 3, 3, 1, 0, 0,
                         0])
-  --method {Powell,SLSQP,COBYLA,CMA}
+  --method {Powell,SLSQP,COBYLA,CMA,L-BFGS-B,diffev}
                         solver method (default: SLSQP)
   --grad                use the analytical jacobian (default: False)
+  --hess                use the analytical hessian (default: False)
   --obs [OBS [OBS ...]]
                         obstacles 4xM values (default: [1, 1, 1, 0.5])
   --random              use random init (default: False)
