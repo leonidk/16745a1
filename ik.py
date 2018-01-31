@@ -18,6 +18,12 @@ if __name__ == '__main__':
     parser.add_argument('--obs', nargs='*', help="obstacles 4xM values",default=[1,1,1, 0.5])
     parser.add_argument('--random', dest='random', action='store_true',help='use random init')
     parser.add_argument('--img', dest='img', action='store_true',help='save image')
+    parser.add_argument('--min_roll', nargs='*', help="minimum joint roll")
+    parser.add_argument('--max_roll', nargs='*', help="maximum joint roll")
+    parser.add_argument('--min_pitch', nargs='*', help="minimum joint pitch")
+    parser.add_argument('--max_pitch', nargs='*', help="maximum joint pitch")
+    parser.add_argument('--min_yaw', nargs='*', help="minimum joint yaw")
+    parser.add_argument('--max_yaw', nargs='*', help="maximum joint yaw")
 
     parser.set_defaults(grad=False)
     parser.set_defaults(hess=False)
@@ -28,12 +34,12 @@ if __name__ == '__main__':
     N = len(args.links)
     pi = 3.14159
     link_lengths = [int(x) for x in args.links] #[2 for _ in range(N)]
-    min_roll     = [-pi for _ in range(N)]
-    max_roll     = [+pi for _ in range(N)]
-    min_pitch    = [-pi for _ in range(N)]
-    max_pitch    = [+pi for _ in range(N)]
-    min_yaw      = [-pi/2.0 for _ in range(N)]
-    max_yaw      = [+pi/2.0 for _ in range(N)]
+    min_roll     = map(float, args.min_roll) if args.min_roll else [-pi for _ in range(N)]
+    max_roll     = map(float, args.max_roll) if args.max_roll else [+pi for _ in range(N)]
+    min_pitch    = map(float, args.min_pitch) if args.min_pitch else [-pi for _ in range(N)]
+    max_pitch    = map(float, args.max_pitch) if args.max_pitch else [+pi for _ in range(N)]
+    min_yaw      = map(float, args.min_yaw) if args.min_yaw else [-pi/2.0 for _ in range(N)]
+    max_yaw      = map(float, args.max_yaw) if args.max_yaw else [+pi/2.0 for _ in range(N)]
     obstacles    = list(chunks([float(x) for x in args.obs],4))
 
     target = [float(x) for x in args.target]
