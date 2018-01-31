@@ -6,18 +6,38 @@ We implemented the solve function following the requested template (see **solve(
 
 Some results can be seen below for different arms of different lengths, with different target positions, different obstacles, etc. 
 
+<img src="img/img20844.png?raw=true" width="300"> <img src="img/img20949.png?raw=true" width="300"> 
+<img src="img/img21015.png?raw=true" width="300"> <img src="img/img20862.png?raw=true" width="300"> 
+
+
 ## Part 2
 We implemented computation of a Jacobian via the Python [autograd](https://github.com/HIPS/autograd) package, which implements [reverse mode differentiation](https://en.wikipedia.org/wiki/Automatic_differentiation#Reverse_accumulation). This can be seen enabled in our script by using the `--grad` option. We include the ability to compute the hessian as well with the `--hess` option but in most of our test cases, the Hessian leads to unstable steps. 
 
-Some results from the improved solver can be seen below
+Some results from the improved solver can be seen below, from the results & situations shown above. All results converged identically well.
+
+| Simulation  | # of Func Eval  (numerical) | # of Func Eval (analytical) |
+| ------------- | ------------- |------------- |
+| 3 link  | 871  | 112 | 
+| 6 link#1  | 480  | 66  | 
+| 6 link#2  | 398  | 49  | 
+| 7 link  | 629  | 79  | 
+
 
 ## Part 3
 We included the Python CMA package, which uses CMA-ES. We set sigma to pi/2.0 for all dimensions. The Python optimization package, much like the MATLAB one, includes many potential solvers. Some do not support bounds, some do not support hard constraints (hence the use of the soft constrained penalties for object intersection). The fixed solvers that we ended up including (due to fairly good convergence and wide parameter support) were 'Powell', 'SLSQP', 'COBYLA', 'CMA', 'L-BFGS-B'. We additionally added Python’s differential evolution optimizer, which like CMA, is derivative-free and worked fairly well. 
 
-Some of our reports results are below
+Some of our results are below for challenging simulations which our initial solver (SLSQP, first row) struggles with. Some solvers give results with different issues when they don't completely converge. For example, in the second simulation shown here, the [Powell](https://en.wikipedia.org/wiki/Powell%27s_method) solver generates a solution through the sphere due to the use of soft constraints, put places the end effector accurately. On the other hand SLSQP avoids the sphere, but fails to place the end effector as accurately. 
+
+<img src="img/f1.png?raw=true" width="300"> <img src="img/s2.png?raw=true" width="300">
+<img src="img/c1.png?raw=true" width="300"> <img src="img/p1.png?raw=true" width="300">
+<img src="img/p2.png?raw=true" width="300"> <img src="img/c2.png?raw=true" width="300">
 
 ## Part 4
-We can find multiple local minima by initializing different solvers with different random initial conditions. We can then report multiple converged results, sorted by our fitness function. Some examples of multiple solutions returned and sorted can be seen below. 
+We can find multiple local minima by initializing different solvers with different random initial conditions. We can then report multiple converged results, sorted by our fitness function. Some examples of multiple solutions returned and sorted can be seen below. Sim uses `--links 2 3 1 3 2 --target 5 3 2  1 0 0 0 --obs 2 2 2 0.75 2 4 2 0.5 4 2 2 0.5 2 2 4 0.5`
+
+<img src="img/img23229.png?raw=true" width="300"> <img src="img/img23258.png?raw=true" width="300">
+<img src="img/img23239.png?raw=true" width="300"> <img src="img/img23246.png?raw=true" width="300"> 
+<img src="img/img23192.png?raw=true" width="300"> <img src="img/img23264.png?raw=true" width="300">
 
 ## Usage
 We're using Python 3.6, and the python packages *numpy*, *matplotlib*, *cma*, *autograd* and *transforms3d*. The first four can be installed with `pip install` while the last one already is included locally. 
