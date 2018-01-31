@@ -1,5 +1,6 @@
 # Inverse Kinematics through Optimization
 [CMU RI 16-745: Dynamic Optimization: Assignment 1](http://www.cs.cmu.edu/~cga/dynopt/ass1/)
+
 Leonid Keselman and Alex Spitzer
 
 ## Part 1
