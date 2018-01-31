@@ -68,7 +68,7 @@ if __name__ == '__main__':
         pos0 = pos
         pos,qM = ik.fwd(pos,l,r,p,y,qM)
         ax.plot([pos0[0],pos[0]], [pos0[1],pos[1]],[pos0[2],pos[2]])
-
+    err = np.sqrt(((np.array(pos) - np.array(target[:3]))**2).sum())
     # plot spheres
     for o in obstacles:
         u = np.linspace(0, 2 * np.pi, 10)
@@ -79,10 +79,14 @@ if __name__ == '__main__':
         ax.plot_surface(x, y, z, color='b')
 
     # plot goal
-    ax.scatter(target[0], target[1], target[2], c='r')
+    ax.scatter(target[0], target[1], target[2], c='r',label='target')
 
-    ax.legend()
+    ax.set_title('{0} of {1} links w/ sq. error of {2:.2f}'.format(args.method,N,err))
+    ax.legend(loc=4)
     ax.set_xlim(0,5)
     ax.set_ylim(0,5)
     ax.set_zlim(0,5)
+    import time
+    seconds = time.time()
+    plt.savefig('img{}.png'.format(int(seconds%(3600*24))), bbox_inches='tight')
     plt.show()
