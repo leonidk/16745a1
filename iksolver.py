@@ -43,7 +43,7 @@ def sphere_line_intersection(l1, l2, sp, r):
         pass  # no intersections
     elif i == 0.0:
         # one intersection
-        p[0] = 1.0
+        #p[0] = 1.0
 
         mu = -b / (2.0 * a)
         p1 = (l1[0] + mu * (l2[0] - l1[0]),
@@ -162,7 +162,7 @@ def solve(target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw
     elif method == 'diffev':
         def callback(xk, convergence):
             #print(convergence)
-            if convergence < 1e-1:
+            if convergence < 0.01:
                 return True
             return False
         res = opt.differential_evolution(func,bounds,callback=callback)
