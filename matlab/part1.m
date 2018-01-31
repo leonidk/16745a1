@@ -16,7 +16,7 @@ function [r, p, y] = part1( target, link_lengths, min_roll, max_roll, min_pitch,
 
 weights = struct;
 weights.POS = 1;
-weights.ATT = 10;
+weights.ATT = 0;
 weights.LIMIT = 0.1;
 weights.COLLISION = 0;
 

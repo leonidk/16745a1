@@ -8,9 +8,12 @@ We implemented the solve function following the requested template (see **solve(
 
 Some results can be seen below for different arms of different lengths, with different target positions, different obstacles, etc.
 
-<img src="img/img20844.png?raw=true" width="300"> <img src="img/img20949.png?raw=true" width="300"> 
-<img src="img/img21015.png?raw=true" width="300"> <img src="img/img20862.png?raw=true" width="300"> 
+<img src="img/img20844.png?raw=true" width="300"> <img src="img/img20949.png?raw=true" width="300">
+<img src="img/img21015.png?raw=true" width="300"> <img src="img/img20862.png?raw=true" width="300">
 
+Below are some results illustrating the effects of joint limits. In all three results below, the target is at 2, 2, 0, with no cost on the final gripper orientation. The first uses unconstrained joints, the second has pitch constrained to be 0, and the third additionally has yaw constrained to be small.
+
+<img src="img/limit_1.gif?raw=true"> <img src="img/limit_2.gif?raw=true"> <img src="img/limit_3.gif?raw=true">
 
 ## Part 2
 We implemented computation of a Jacobian via the Python [autograd](https://github.com/HIPS/autograd) package, which implements [reverse mode differentiation](https://en.wikipedia.org/wiki/Automatic_differentiation#Reverse_accumulation). This can be seen enabled in our script by using the `--grad` option. We include the ability to compute the hessian as well with the `--hess` option but in most of our test cases, the Hessian leads to unstable steps. 

@@ -1,22 +1,31 @@
-target_pos = [ 2 5 9 ];
+%target_pos = [ 2 5 9 ];
 %target_pos = [ -18 0 0 ];
-target_q = [ 0.707 0 0.707 0 ];
 
-link_lengths = [ 3 3 3 3 3 3 ];
+N = 16;
 
-min_roll = [ -pi/10 -pi -pi -pi -pi -pi ];
-max_roll = [ pi/10 pi pi pi pi pi ];
+target_pos = [ 2 2 0 ];
+target_q = [ 0.707 0 0 0.707 ];
 
-min_pitch = [ -pi -pi -pi -pi -pi -pi ];
-max_pitch = [ pi pi pi pi pi pi ];
+link_lengths = 3 * ones(1, N);
 
-min_yaw = [ -pi/4 -pi -pi -pi -pi -pi ];
-max_yaw = [ pi/4 pi pi pi pi pi ];
+min_roll = -0 * ones(1, N);
+max_roll =  0 * ones(1, N);
+%min_pitch = [ -pi -pi -pi -pi -pi -pi ];
+%max_pitch = [ pi pi pi pi pi pi ];
+
+min_pitch = zeros(1, N);
+max_pitch = zeros(1, N);
+
+%min_yaw = [ -pi/4 -pi -pi -pi -pi -pi ];
+%max_yaw = [ pi/4 pi pi pi pi pi ];
+
+min_yaw = (-pi / 5) * ones(1, N);
+max_yaw = ( pi / 5) * ones(1, N);
 
 % x y z radius
 obstacles = [
- 2 7 2 7
- 2 2 4 0.4
+% 2 7 2 7
+% 2 2 4 0.4
 ];
 
 target = [ target_pos target_q ];

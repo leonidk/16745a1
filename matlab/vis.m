@@ -19,4 +19,5 @@ function vis(points, obstacles, target)
   end
 
   axis equal
+  grid on
 end
