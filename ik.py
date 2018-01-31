@@ -17,10 +17,12 @@ if __name__ == '__main__':
     parser.add_argument('--hess', dest='hess', action='store_true',help='use the analytical hessian')
     parser.add_argument('--obs', nargs='*', help="obstacles 4xM values",default=[1,1,1, 0.5])
     parser.add_argument('--random', dest='random', action='store_true',help='use random init')
+    parser.add_argument('--img', dest='img', action='store_true',help='save image')
 
     parser.set_defaults(grad=False)
     parser.set_defaults(hess=False)
     parser.set_defaults(random=False)
+    parser.set_defaults(img=False)
 
     args = parser.parse_args()
     N = len(args.links)
@@ -86,7 +88,8 @@ if __name__ == '__main__':
     ax.set_xlim(0,5)
     ax.set_ylim(0,5)
     ax.set_zlim(0,5)
-    import time
-    seconds = time.time()
-    plt.savefig('img{}.png'.format(int(seconds%(3600*24))), bbox_inches='tight')
+    if args.img:
+        import time
+        seconds = time.time()
+        plt.savefig('img{}.png'.format(int(seconds%(3600*24))), bbox_inches='tight')
     plt.show()
