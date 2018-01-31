@@ -49,7 +49,7 @@ Our experiments with inverse kinematics falling into local minima that are inade
 Overall, we were able to test many strategies (random restart & initializations, or using a method like CMA) which lead to viable solutions of inverse kinematics problems, with a range of target positions and obstacles, by use of optimization methods. To enable a wider variety of methods, we tended to prefer using a soft constraint for the obstacles, as it allowed larger families of solvers (namely derivative free methods) to operate correctly. Satisfying hard constraints would have required gradients relative to these constraints (see: [KKT conditions](https://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions)), and rendered a very useful class of solvers unsuitable for this problem.  
 
 ## Usage
-We're using Python 3.6, and the python packages *numpy*, *matplotlib*, *cma*, *autograd* and *transforms3d*. The first four can be installed with `pip install` while the last one already is included locally. 
+We're using Python 3.6, and the python packages *numpy*, *scipy*, *matplotlib*, *cma*, *autograd* and *transforms3d*. The first five can be installed with `pip install` while the last one already is included locally.
 
 See `python ik.py --help` for information about how to run the optimizer (set target position, select method, set obstacles, etc.) 
 ```
